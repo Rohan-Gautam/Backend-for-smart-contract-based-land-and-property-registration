@@ -4,6 +4,11 @@ import bcrypt from 'bcrypt';
 
 // Define User Schema
 const userSchema = new mongoose.Schema({
+    name:{
+        type:String,
+        required:true,
+        unique:true,
+    },
     username: {
         type: String,
         required: true,
@@ -38,7 +43,7 @@ const User = mongoose.model('User', userSchema);
 
 // Export the registration function
 export const registerUser = async (req, res) => {
-    const { username, email, password } = req.body;
+    const { name, username, email, password } = req.body;
 
     try {
         // Check if user already exists
@@ -51,6 +56,7 @@ export const registerUser = async (req, res) => {
         const hashedPassword = await bcrypt.hash(password, 10);
         // Create new user
         const newUser = new User({
+            name,
             username,
             email,
             password: hashedPassword // In production, hash this password (e.g., with bcrypt)

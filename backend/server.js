@@ -40,3 +40,4 @@ app.post('/api/register', registerUser); // API endpoint for registration
 app.listen(PORT, () => {
     console.log(`Server running on: http://localhost:${PORT}`);
 });
+
