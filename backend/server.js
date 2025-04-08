@@ -1,9 +1,9 @@
 import express from 'express';
 import mongoose from 'mongoose';
+import cors from 'cors';
 import path from 'path';
 import { fileURLToPath } from 'url';
-import { registerUser } from './register.js'; // Import the registration function
-
+import { loginUser, registerUser } from './register.js';
 const app = express();
 const PORT = 5001;
 
@@ -15,6 +15,8 @@ const MONGO_URI = 'mongodb://localhost:27017/landRegistrationDB';
 // Middleware
 app.use(express.static(path.join(__dirname, '../frontend')));
 app.use(express.json()); // Parse JSON bodies from requests
+app.use(cors({ origin: 'http://localhost:3000', credentials: true }));
+
 
 // MongoDB Connection
 mongoose.connect(MONGO_URI)
@@ -27,14 +29,15 @@ app.get('/', (req, res) => {
 });
 
 app.get('/login', (req, res) => {
-    res.send('Login Page Placeholder - To be implemented in React');
+    res.sendFile(path.join(__dirname, '../frontend', 'login.html'));
 });
 
 app.get('/register', (req, res) => {
-    res.sendFile(path.join(__dirname, '../frontend', 'register.html')); // Serve register.html
+    res.sendFile(path.join(__dirname, '../frontend', 'register.html'));
 });
 
-app.post('/api/register', registerUser); // API endpoint for registration
+app.post('/api/register', registerUser);
+app.post('/api/login', loginUser);
 
 // Start Server
 app.listen(PORT, () => {
